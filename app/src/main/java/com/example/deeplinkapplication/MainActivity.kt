@@ -11,9 +11,9 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.deeplinkapplication.databinding.ActivityBottomNavBinding
 import com.example.deeplinkapplication.deeplink.DeeManual
-import com.example.deeplinkapplication.deeplink.RootSegments
-import com.example.deeplinkapplication.deeplink.constructDeeplinkedNodes
-import com.example.deeplinkapplication.deeplink.deeplinkInto
+import com.example.deeplinkapplication.deeplink.RootDirections
+import com.example.deeplinkapplication.deeplink.buildDeeLinker
+import com.example.deeplinkapplication.deeplink.deeLinkInto
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity() {
@@ -30,63 +30,66 @@ class MainActivity : AppCompatActivity() {
         navView.setupWithNavController(navController)
 
         intent.data?.let { deeplinkUri ->
-            startDeeLinking(deeplinkUri)
+            startDeeLinker(deeplinkUri)
         }
 
-        testLinks()
     }
-
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
         intent?.data?.let { deeplinkUri ->
-            startDeeLinking(deeplinkUri)
+            startDeeLinker(deeplinkUri)
         }
     }
 
-    private fun startDeeLinking(data: Uri) {
-        constructDeeplinkedNodes(
+    private fun startDeeLinker(data: Uri) {
+        buildDeeLinker(
             data,
-            DeeManual("https://myorders/all-orders") {
+            DeeManual("uzum://myorders/all-orders") {
                 startActivity(Intent(this@MainActivity, OrdersActivity::class.java))
             },
             DeeManual(
                 matcher = { url ->
-                    "https://uzum.uz/myorders/.*".toRegex().matches(url)
+                    "uzum://uzum.uz/myorders/.*".toRegex().matches(url)
                 },
                 onMatch = { matchedUrl ->
                     startActivity(Intent(this@MainActivity, OrderActivity::class.java).apply {
                         putExtra(OrderActivity.EXTRA_ORDER_ID, matchedUrl.substringAfterLast("/"))
                     })
                 })
-        )?.let { deeplinkStartNode ->
-
-
-            when (RootSegments.values().firstOrNull { it.id == deeplinkStartNode.segment.id }) {
-                RootSegments.HOME -> {
+        )?.let { deeStartNode ->
+            when (RootDirections.values().firstOrNull { it.segment == deeStartNode.segment }) {
+                RootDirections.HOME -> {
                     //DO NOTHING YOU ARE ALREADY HERE
                 }
 
-                RootSegments.DASHBOARD -> {
-                    navController.deeplinkInto(R.id.navigation_dashboard, deeplinkStartNode.next)
+                RootDirections.DASHBOARD -> {
+                    navController.deeLinkInto(
+                        R.id.navigation_dashboard,
+                        deeStartNode.nextNode
+                    )
                 }
 
-                RootSegments.CABINET -> {
-                    navController.deeplinkInto(R.id.navigation_cabinet, deeplinkStartNode.next)
+                RootDirections.CABINET -> {
+                    navController.deeLinkInto(R.id.navigation_cabinet, deeStartNode.nextNode)
+                    if (deeStartNode.nextNode == null) {
+                        deeStartNode.getIdParam()?.let { orderId ->
+                            startActivity(
+                                Intent(this@MainActivity, OrderActivity::class.java).apply {
+                                    putExtra(OrderActivity.EXTRA_ORDER_ID, orderId)
+                                })
+                        }
+                    }
                 }
 
                 null -> {
-                    println("Unknown deeplink start node (Consuming in MainActivity): ${deeplinkStartNode.segment}")
+                    println("Unknown deeplink start node (Consuming in MainActivity): ${deeStartNode.segment}")
                 }
             }
 
 
         }
         intent.data = null
-
-
-
-
     }
 
 }

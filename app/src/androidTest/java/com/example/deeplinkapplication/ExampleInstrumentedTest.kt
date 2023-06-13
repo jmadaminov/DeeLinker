@@ -1,12 +1,15 @@
 package com.example.deeplinkapplication
 
-import androidx.test.platform.app.InstrumentationRegistry
+import android.net.Uri
+import android.util.Log
 import androidx.test.ext.junit.runners.AndroidJUnit4
-
+import androidx.test.platform.app.InstrumentationRegistry
+import com.example.deeplinkapplication.deeplink.DeeNode
+import com.example.deeplinkapplication.deeplink.RootDirections
+import com.example.deeplinkapplication.deeplink.buildDeeLinker
+import org.junit.Assert.*
 import org.junit.Test
 import org.junit.runner.RunWith
-
-import org.junit.Assert.*
 
 /**
  * Instrumented test, which will execute on an Android device.
@@ -21,4 +24,50 @@ class ExampleInstrumentedTest {
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
         assertEquals("com.example.deeplinkapplication", appContext.packageName)
     }
+
+
+    @Test
+    fun checkDeeplinks() {
+        assert(testLinks())
+    }
+
+
+    private val deeplinks = listOf(
+        "uzum://cabinet",
+        "uzum://home",
+        "uzum://cabinet/orders",
+        "uzum://cabinet/orders/123",
+        "uzum://cabinet/orders/all",
+//        "uzum://cabinet/home",
+    )
+
+
+    fun testLinks(): Boolean {
+        deeplinks.forEach {
+            if (!testUriConsumable(Uri.parse(it))) return false/*throw Exception("URI NOT CONSUMABLE! PLEASE ADD DEEPLINK LOGIC FOR $it")*/
+        }
+        return true
+    }
+
+    fun testUriConsumable(uri: Uri): Boolean {
+        val deeplinkStartingSegment = buildDeeLinker(uri)
+        return traverseSegments(RootDirections.values().map { it }, deeplinkStartingSegment)
+    }
+
+    fun traverseSegments(actual: List<DeeNode>, deeNode: DeeNode?): Boolean {
+        if (deeNode == null) return false
+        actual.forEach {
+            if (it.segment == deeNode.segment) {
+                return if (deeNode.nextNode == null) true
+                else traverseSegments(it.possibleDirections, deeNode.nextNode)
+            }
+        }
+        Log.e(
+            "DeeLinker",
+            "Trying to consume unknown node ==> ${deeNode.segment} <== which does not exist in *** $actual ***. Make sure you have registered the node in DeeSegmentTree.kt"
+        )
+        return false
+    }
+
+
 }

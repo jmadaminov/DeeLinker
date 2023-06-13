@@ -8,9 +8,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager2.widget.ViewPager2
 import com.example.deeplinkapplication.OrderActivity.Companion.EXTRA_ORDER_ID
 import com.example.deeplinkapplication.databinding.ActivityOrdersBinding
-import com.example.deeplinkapplication.deeplink.OrdersSegments
+import com.example.deeplinkapplication.deeplink.OrdersDirections
 import com.example.deeplinkapplication.deeplink.consumeDeeNodeAs
-import com.example.deeplinkapplication.deeplink.deeplinkInto
+import com.example.deeplinkapplication.deeplink.deeLinkInto
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 
@@ -27,31 +27,25 @@ class OrdersActivity : AppCompatActivity() {
         setContentView(binding.root)
         setupViewPagerWithTabs()
 
-        consumeDeeNodeAs<OrdersSegments> { segment, dlNode ->
-            when (segment) {
-                OrdersSegments.ACTIVE -> {
-                    pager.setCurrentItem(0, true)
-                }
 
-                OrdersSegments.ALL -> {
-                    pager.setCurrentItem(1, true)
-                }
-                OrdersSegments.ORDERS -> {
+        consumeDeeNodeAs<OrdersDirections>(
+            onParamId = { idParam, dlNode ->
+                deeLinkInto<OrderActivity>(dlNode)
+            },
+            onQuery = { query, dlNode ->
+                binding.tvQuery.text = query
+            },
+            consumeBlock = { direction, dlNode ->
+                when (direction) {
+                    OrdersDirections.ACTIVE -> {
+                        pager.setCurrentItem(0, true)
+                    }
 
-
+                    OrdersDirections.ALL -> {
+                        pager.setCurrentItem(1, true)
+                    }
                 }
-
-                null -> {
-                    print("WARNING! UNKNOWN DEEPLINK NODE! CAN'T GO FURTHER!")
-                }
-
-            }
-            dlNode.getIdParam()?.let { orderId ->
-                deeplinkInto<OrderActivity>(dlNode.next) {
-                    putExtra(EXTRA_ORDER_ID, orderId)
-                }
-            }
-        }
+            })
 
         intent?.getStringExtra(EXTRA_ORDER_ID)?.let { orderId ->
             startActivity(Intent(this, OrderActivity::class.java).apply {

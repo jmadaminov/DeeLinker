@@ -1,39 +1,53 @@
 package com.example.deeplinkapplication.deeplink
 
-
-enum class RootSegments(
-    override val id: String,
-    override val nextSegments: List<DeeSegment> = listOf()
-) : DeeSegment {
+enum class RootDirections(
+    override var segment: String,
+    override val possibleDirections: MutableList<DeeNode> = mutableListOf(),
+    override var host: String = "",
+    override var nextNode: DeeNode? = null,
+) : DeeNode {
     HOME("home"),
-    DASHBOARD("dashboard", DashboardSegments.values().toList() + OrdersSegments.values().toList()),
-    CABINET("cabinet", CabinetSegments.values().toList())
+    DASHBOARD("dashboard") {
+        override val possibleDirections = mutableListOf<DeeNode>(
+            *DashboardDirections.values(),
+            *OrdersDirections.values()
+        )
+    },
+    CABINET("cabinet") {
+        override val possibleDirections: MutableList<DeeNode> =
+            mutableListOf(*CabinetDirections.values())
+    }
 }
 
-enum class CabinetSegments(
-    override val id: String,
-    override val nextSegments: List<DeeSegment> = emptyList()
-) : DeeSegment {
-    ORDERS("orders", OrdersSegments.values().toList()),
-    PROFILE("profile");
+enum class CabinetDirections(
+    override var segment: String,
+    override val possibleDirections: MutableList<DeeNode> = mutableListOf(),
+    override var host: String = "",
+    override var nextNode: DeeNode? = null,
+) : DeeNode {
+    ORDERS("orders") {
+        override val possibleDirections = mutableListOf<DeeNode>(*OrdersDirections.values())
+    },
+    PROFILE("profile") {
+        override val possibleDirections = mutableListOf<DeeNode>()
+    }
 }
 
-sealed class SSegmentCabinet : SSegment {
-    data class Orders(override val name: String = "") : SSegmentCabinet()
+enum class DashboardDirections(
+    override var segment: String,
+    override val possibleDirections: MutableList<DeeNode> = mutableListOf(),
+    override var host: String = "",
+    override var nextNode: DeeNode? = null,
+) : DeeNode {
+    SOME_DASHBOARD_NODE("some_dashboard_segment"),
 }
 
-enum class DashboardSegments(
-    override val id: String,
-    override val nextSegments: List<DeeSegment> = emptyList()
-) : DeeSegment {
-    SOME_DASHBOARD_SEGMENT("some_dashboard_segment")
-}
-
-enum class OrdersSegments(
-    override val id: String,
-    override val nextSegments: List<DeeSegment> = listOf()
-) : DeeSegment {
+enum class OrdersDirections(
+    override var segment: String,
+    override val possibleDirections: MutableList<DeeNode> = mutableListOf(),
+    override var host: String = "",
+    override var nextNode: DeeNode? = null,
+) : DeeNode {
     ACTIVE("active"),
     ALL("all"),
-    ORDERS("orders")
 }

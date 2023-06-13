@@ -2,6 +2,7 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
     id("kotlin-parcelize")
+    id("kotlinx-serialization")
 }
 
 android {
@@ -75,10 +76,25 @@ dependencies {
     androidTestImplementation 'androidx.compose.ui:ui-test-junit4'
     debugImplementation 'androidx.compose.ui:ui-tooling'
     debugImplementation 'androidx.compose.ui:ui-test-manifest'
+    implementation("io.arrow-kt:arrow-core:1.2.0-RC")
+    implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1"
+
+    implementation 'com.google.code.gson:gson:2.10.1'
+
+    // Required -- JUnit 4 framework
+    testImplementation "junit:junit:4.13.2"
+    // Optional -- Robolectric environment
+    testImplementation "androidx.test:core:1.5.0"
+//    // Optional -- Mockito framework
+//    testImplementation "org.mockito:mockito-core:5.3.1"
+//
+//    // Optional -- mockito-kotlin
+//    testImplementation "org.mockito.kotlin:mockito-kotlin:5.0.0"
+    // Optional -- Mockk framework
+    testImplementation "io.mockk:mockk:1.13.5"
 }
-tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
-    kotlinOptions {
-        languageVersion = "1.9"
-        apiVersion = "1.8"
-    }
-}
+//tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
+//    kotlinOptions {
+//        apiVersion = "1.8"
+//    }
+//}

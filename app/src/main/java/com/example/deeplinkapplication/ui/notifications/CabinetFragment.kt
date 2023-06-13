@@ -11,9 +11,9 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.deeplinkapplication.OrderActivity
 import com.example.deeplinkapplication.OrdersActivity
 import com.example.deeplinkapplication.databinding.FragmentCabinetBinding
-import com.example.deeplinkapplication.deeplink.CabinetSegments
-import com.example.deeplinkapplication.deeplink.consumeDlNodeInFragAs
-import com.example.deeplinkapplication.deeplink.deeplinkInto
+import com.example.deeplinkapplication.deeplink.CabinetDirections
+import com.example.deeplinkapplication.deeplink.consumeDeeNodeInFragAs
+import com.example.deeplinkapplication.deeplink.deeLinkInto
 
 class CabinetFragment : Fragment() {
 
@@ -48,17 +48,15 @@ class CabinetFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
 
-        consumeDlNodeInFragAs<CabinetSegments> { segment, nextDlNode ->
+        consumeDeeNodeInFragAs<CabinetDirections> { segment, deeNode ->
             when (segment) {
-                CabinetSegments.ORDERS -> {
-                    deeplinkInto<OrdersActivity>(nextDlNode.next) {
-                        putExtra(OrderActivity.EXTRA_ORDER_ID, nextDlNode.getIdParam())
-                    }
+                CabinetDirections.ORDERS -> {
+                    deeLinkInto<OrdersActivity>(deeNode)
                 }
-                CabinetSegments.PROFILE -> {
+
+                CabinetDirections.PROFILE -> {
 
                 }
-                null -> {}
             }
         }
 
