@@ -86,8 +86,6 @@ class MainActivity : AppCompatActivity() {
                     println("Unknown deeplink start node (Consuming in MainActivity): ${deeStartNode.segment}")
                 }
             }
-
-
         }
         intent.data = null
     }
