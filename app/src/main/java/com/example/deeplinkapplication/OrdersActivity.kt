@@ -46,14 +46,6 @@ class OrdersActivity : AppCompatActivity() {
                     }
                 }
             })
-
-        intent?.getStringExtra(EXTRA_ORDER_ID)?.let { orderId ->
-            startActivity(Intent(this, OrderActivity::class.java).apply {
-                addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
-                putExtra(EXTRA_ORDER_ID, orderId)
-            })
-        }
-
     }
 
     private fun setupViewPagerWithTabs() {
