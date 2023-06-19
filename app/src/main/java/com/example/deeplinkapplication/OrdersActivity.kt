@@ -2,12 +2,11 @@
 
 package com.example.deeplinkapplication
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager2.widget.ViewPager2
-import com.example.deeplinkapplication.OrderActivity.Companion.EXTRA_ORDER_ID
 import com.example.deeplinkapplication.databinding.ActivityOrdersBinding
+import com.example.deeplinkapplication.deeplink.DeeNode
 import com.example.deeplinkapplication.deeplink.OrdersDirections
 import com.example.deeplinkapplication.deeplink.consumeDeeNodeAs
 import com.example.deeplinkapplication.deeplink.deeLinkInto
@@ -30,7 +29,9 @@ class OrdersActivity : AppCompatActivity() {
 
         consumeDeeNodeAs<OrdersDirections>(
             onParamId = { idParam, dlNode ->
-                deeLinkInto<OrderActivity>(dlNode)
+                deeLinkInto<OrderActivity>(dlNode) {
+                    putExtra(DeeNode.PARAM_ID, idParam)
+                }
             },
             onQuery = { query, dlNode ->
                 binding.tvQuery.text = query
