@@ -3,6 +3,7 @@ package com.example.deeplinkapplication
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.deeplinkapplication.databinding.ActivityOrderBinding
+import com.example.deeplinkapplication.deeplink.DeeNode
 import com.example.deeplinkapplication.deeplink.consumeDeeNodeAs
 
 class OrderActivity : AppCompatActivity() {
@@ -16,6 +17,10 @@ class OrderActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         intent.getStringExtra(EXTRA_ORDER_ID)?.let { orderId ->
+            binding.tvSelectedOrder.text = orderId
+        }
+
+        intent.getStringExtra(DeeNode.PARAM_ID)?.let { orderId ->
             binding.tvSelectedOrder.text = orderId
         }
 

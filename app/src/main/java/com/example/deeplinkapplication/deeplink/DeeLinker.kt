@@ -29,6 +29,7 @@ fun buildDeeLinker(deeplinkUri: Uri, vararg deeManuals: DeeManual): DeeNode? {
             if (pathEntry.isNotBlank()) {
                 currentNode = if (currentNode == null) {
                     val node = RootDirections.values().firstOrNull { it.segment == pathEntry }
+                    node?.nextNode = null
                     node?.setIdParam(null)
                     node?.setQuery(null)
                     node
