@@ -49,7 +49,7 @@ afterEvaluate {
             release(MavenPublication) {
                 from components.release
 
-                groupId = 'dev.jmadaminov'
+                groupId = 'com.github.jakhongirmadaminov'
                 artifactId = 'deelinker'
                 version = '0.0.1'
             }

@@ -52,7 +52,8 @@ android {
 }
 
 dependencies {
-    implementation(project(":deelinker"))
+
+    implementation("com.github.jakhongirmadaminov:deelinker:0.0.1-alpha")
     implementation("org.jetbrains.kotlin:kotlin-script-runtime:1.8.21")
     implementation 'androidx.core:core-ktx:1.8.0'
     implementation platform('org.jetbrains.kotlin:kotlin-bom:1.8.0')
