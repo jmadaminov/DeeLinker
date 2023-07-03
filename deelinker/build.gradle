@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace 'dev.jmadaminov.deelinker'
+    namespace 'com.github.jakhongirmadaminov.deelinker'
     compileSdk 33
 
     defaultConfig {
@@ -51,7 +51,7 @@ afterEvaluate {
 
                 groupId = 'com.github.jakhongirmadaminov'
                 artifactId = 'deelinker'
-                version = '0.0.6-alpha'
+                version = '0.0.7-alpha'
             }
         }
     }
