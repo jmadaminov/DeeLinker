@@ -1,4 +1,4 @@
-package com.example.deeplinkapplication.deeplink
+package dev.jmadaminov.deelinker
 
 data class DeeManual(
     val url: String? = null,

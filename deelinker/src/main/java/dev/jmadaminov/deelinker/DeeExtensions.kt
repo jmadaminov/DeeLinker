@@ -1,4 +1,4 @@
-package com.example.deeplinkapplication.deeplink
+package dev.jmadaminov.deelinker
 
 import android.app.Activity
 import android.content.Intent

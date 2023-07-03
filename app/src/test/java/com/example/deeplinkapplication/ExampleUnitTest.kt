@@ -1,15 +1,5 @@
 package com.example.deeplinkapplication
 
-import android.net.Uri
-import com.example.deeplinkapplication.deeplink.DeeNode
-import com.example.deeplinkapplication.deeplink.RootDirections
-import com.example.deeplinkapplication.deeplink.buildDeeLinker
-import io.mockk.impl.annotations.MockK
-import io.mockk.junit4.MockKRule
-import org.junit.Rule
-import org.junit.Test
-import org.junit.runner.RunWith
-
 /**
  * Example local unit test, which will execute on the development machine (host).
  *

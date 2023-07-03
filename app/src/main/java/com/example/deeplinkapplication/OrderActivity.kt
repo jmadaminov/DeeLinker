@@ -3,8 +3,7 @@ package com.example.deeplinkapplication
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.deeplinkapplication.databinding.ActivityOrderBinding
-import com.example.deeplinkapplication.deeplink.DeeNode
-import com.example.deeplinkapplication.deeplink.consumeDeeNodeAs
+import dev.jmadaminov.deelinker.DeeNode
 
 class OrderActivity : AppCompatActivity() {
 

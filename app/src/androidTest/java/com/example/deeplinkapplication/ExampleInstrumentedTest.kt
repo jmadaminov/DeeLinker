@@ -4,9 +4,10 @@ import android.net.Uri
 import android.util.Log
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
-import com.example.deeplinkapplication.deeplink.DeeNode
-import com.example.deeplinkapplication.deeplink.RootDirections
-import com.example.deeplinkapplication.deeplink.buildDeeLinker
+import com.example.deeplinkapplication.deeplink.MainDirections
+import com.example.deeplinkapplication.deeplink.hosts
+import dev.jmadaminov.deelinker.DeeNode
+import dev.jmadaminov.deelinker.buildDeeLinker
 import org.junit.Assert.*
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -50,8 +51,18 @@ class ExampleInstrumentedTest {
     }
 
     fun testUriConsumable(uri: Uri): Boolean {
-        val deeplinkStartingSegment = buildDeeLinker(uri)
-        return traverseSegments(RootDirections.values().map { it }, deeplinkStartingSegment)
+        val deeplinkStartingSegment = buildDeeLinker(
+            uri,
+            hosts = hosts,
+            root = object : DeeNode {
+                override var host: String = ""
+                override var segment: String = ""
+                override var nextNode: DeeNode? = null
+                override val possibleDirections = mutableListOf<DeeNode>(*MainDirections.values())
+
+            },
+        )
+        return traverseSegments(MainDirections.values().map { it }, deeplinkStartingSegment)
     }
 
     fun traverseSegments(actual: List<DeeNode>, deeNode: DeeNode?): Boolean {

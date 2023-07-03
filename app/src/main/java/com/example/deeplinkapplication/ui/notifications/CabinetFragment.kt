@@ -8,12 +8,11 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.example.deeplinkapplication.OrderActivity
 import com.example.deeplinkapplication.OrdersActivity
 import com.example.deeplinkapplication.databinding.FragmentCabinetBinding
 import com.example.deeplinkapplication.deeplink.CabinetDirections
-import com.example.deeplinkapplication.deeplink.consumeDeeNodeInFragAs
-import com.example.deeplinkapplication.deeplink.deeLinkInto
+import dev.jmadaminov.deelinker.consumeDeeNodeInFragAs
+import dev.jmadaminov.deelinker.deeLinkInto
 
 class CabinetFragment : Fragment() {
 

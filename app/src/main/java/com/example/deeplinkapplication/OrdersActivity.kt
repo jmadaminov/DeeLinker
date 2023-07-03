@@ -6,12 +6,12 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager2.widget.ViewPager2
 import com.example.deeplinkapplication.databinding.ActivityOrdersBinding
-import com.example.deeplinkapplication.deeplink.DeeNode
 import com.example.deeplinkapplication.deeplink.OrdersDirections
-import com.example.deeplinkapplication.deeplink.consumeDeeNodeAs
-import com.example.deeplinkapplication.deeplink.deeLinkInto
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
+import dev.jmadaminov.deelinker.DeeNode
+import dev.jmadaminov.deelinker.consumeDeeNodeAs
+import dev.jmadaminov.deelinker.deeLinkInto
 
 class OrdersActivity : AppCompatActivity() {
 

@@ -5,16 +5,18 @@ package com.example.deeplinkapplication
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import androidx.annotation.IdRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.deeplinkapplication.databinding.ActivityBottomNavBinding
-import com.example.deeplinkapplication.deeplink.DeeManual
-import com.example.deeplinkapplication.deeplink.RootDirections
-import com.example.deeplinkapplication.deeplink.buildDeeLinker
-import com.example.deeplinkapplication.deeplink.deeLinkInto
+import com.example.deeplinkapplication.deeplink.MainDirections
+import com.example.deeplinkapplication.deeplink.hosts
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import dev.jmadaminov.deelinker.DeeManual
+import dev.jmadaminov.deelinker.DeeNode
+import dev.jmadaminov.deelinker.buildDeeLinker
 
 class MainActivity : AppCompatActivity() {
 
@@ -44,7 +46,15 @@ class MainActivity : AppCompatActivity() {
 
     private fun startDeeLinker(data: Uri) {
         buildDeeLinker(
-            data,
+            deeplinkUri = data,
+            root = object : DeeNode {
+                override var host: String = ""
+                override var segment: String = ""
+                override var nextNode: DeeNode? = null
+                override val possibleDirections = mutableListOf<DeeNode>(*MainDirections.values())
+
+            },
+            hosts = hosts,
             DeeManual("uzum://myorders/all-orders") {
                 startActivity(Intent(this@MainActivity, OrdersActivity::class.java))
             },
@@ -58,19 +68,19 @@ class MainActivity : AppCompatActivity() {
                     })
                 })
         )?.let { deeStartNode ->
-            when (RootDirections.values().firstOrNull { it.segment == deeStartNode.segment }) {
-                RootDirections.HOME -> {
+            when (MainDirections.values().firstOrNull { it.segment == deeStartNode.segment }) {
+                MainDirections.HOME -> {
                     //DO NOTHING YOU ARE ALREADY HERE
                 }
 
-                RootDirections.DASHBOARD -> {
+                MainDirections.DASHBOARD -> {
                     navController.deeLinkInto(
                         R.id.navigation_dashboard,
                         deeStartNode.nextNode
                     )
                 }
 
-                RootDirections.CABINET -> {
+                MainDirections.CABINET -> {
                     navController.deeLinkInto(R.id.navigation_cabinet, deeStartNode.nextNode)
                     if (deeStartNode.nextNode == null) {
                         deeStartNode.getIdParam()?.let { orderId ->
@@ -92,3 +102,9 @@ class MainActivity : AppCompatActivity() {
 
 }
 
+
+fun NavController.deeLinkInto(@IdRes destinationId: Int, node: DeeNode?) {
+    navigate(
+        destinationId,
+        Bundle().apply { putSerializable(DeeNode.NODE_KEY, node) })
+}
