@@ -12,11 +12,12 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.deeplinkapplication.databinding.ActivityBottomNavBinding
 import com.example.deeplinkapplication.deeplink.MainDirections
-import com.example.deeplinkapplication.deeplink.hosts
+import com.example.deeplinkapplication.deeplink.myHosts
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import dev.jmadaminov.deelinker.DeeManual
+import dev.jmadaminov.deelinker.DeeMatcher
 import dev.jmadaminov.deelinker.DeeNode
 import dev.jmadaminov.deelinker.buildDeeLinker
+import dev.jmadaminov.deelinker.deeConfig
 
 class MainActivity : AppCompatActivity() {
 
@@ -45,28 +46,33 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun startDeeLinker(data: Uri) {
-        buildDeeLinker(
+        buildDeeLinker<MainDirections>(
             deeplinkUri = data,
-            root = object : DeeNode {
-                override var host: String = ""
-                override var segment: String = ""
-                override var nextNode: DeeNode? = null
-                override val possibleDirections = mutableListOf<DeeNode>(*MainDirections.values())
-
-            },
-            hosts = hosts,
-            DeeManual("uzum://myorders/all-orders") {
-                startActivity(Intent(this@MainActivity, OrdersActivity::class.java))
-            },
-            DeeManual(
-                matcher = { url ->
-                    "uzum://uzum.uz/myorders/.*".toRegex().matches(url)
-                },
-                onMatch = { matchedUrl ->
-                    startActivity(Intent(this@MainActivity, OrderActivity::class.java).apply {
-                        putExtra(OrderActivity.EXTRA_ORDER_ID, matchedUrl.substringAfterLast("/"))
-                    })
-                })
+            config = deeConfig {
+                hosts = myHosts
+                deeMatchers = listOf(
+                    DeeMatcher("uzum://myorders/all-orders") {
+                        startActivity(Intent(this@MainActivity, OrdersActivity::class.java))
+                    },
+                    DeeMatcher(
+                        matcher = { url ->
+                            "uzum://uzum.uz/myorders/.*".toRegex().matches(url)
+                        },
+                        onMatch = { matchedUrl ->
+                            startActivity(
+                                Intent(
+                                    this@MainActivity,
+                                    OrderActivity::class.java
+                                ).apply {
+                                    putExtra(
+                                        OrderActivity.EXTRA_ORDER_ID,
+                                        matchedUrl.substringAfterLast("/")
+                                    )
+                                })
+                        })
+                )
+                ignoreSegmentKeys = listOf("uz", "ru", "en")
+            }
         )?.let { deeStartNode ->
             when (MainDirections.values().firstOrNull { it.segment == deeStartNode.segment }) {
                 MainDirections.HOME -> {

@@ -6,7 +6,7 @@ interface DeeNode : Serializable {
     var host: String
     var segment: String
     var nextNode: DeeNode?
-    val possibleDirections: MutableList<DeeNode>
+    val childNodes: MutableList<DeeNode>
     fun getQuery() = params[QUERY_KEY]
     fun getIdParam() = params[PARAM_ID]
     fun setIdParam(id: String?) {

@@ -15,7 +15,7 @@ private const val ADJUST_SCHEME = "android-app"
 private const val ADJUST_HOST = "uz.uzum.app"
 const val APPSFLYER_ONELINK_HOST = "uzum.onelink.me"
 
- val hosts = listOf(
+ val myHosts = listOf(
     UZUM_HOST,
     UZUM_WEB_HOST,
     UZUM_HOST_STREAM,
@@ -24,42 +24,42 @@ const val APPSFLYER_ONELINK_HOST = "uzum.onelink.me"
 
 
 
-enum class MainDirections(
+enum class  MainDirections(
     override var segment: String,
-    override val possibleDirections: MutableList<DeeNode> = mutableListOf(),
+    override val childNodes: MutableList<DeeNode> = mutableListOf(),
     override var host: String = "",
     override var nextNode: DeeNode? = null,
-) : DeeNode {
+) : DeeNode  {
     HOME("home"),
     DASHBOARD("dashboard") {
-        override val possibleDirections = mutableListOf<DeeNode>(
+        override val childNodes = mutableListOf<DeeNode>(
             *DashboardDirections.values(),
             *OrdersDirections.values()
         )
     },
     CABINET("cabinet") {
-        override val possibleDirections: MutableList<DeeNode> =
+        override val childNodes: MutableList<DeeNode> =
             mutableListOf(*CabinetDirections.values())
     }
 }
 
 enum class CabinetDirections(
     override var segment: String,
-    override val possibleDirections: MutableList<DeeNode> = mutableListOf(),
+    override val childNodes: MutableList<DeeNode> = mutableListOf(),
     override var host: String = "",
     override var nextNode: DeeNode? = null,
 ) : DeeNode {
     ORDERS("orders") {
-        override val possibleDirections = mutableListOf<DeeNode>(*OrdersDirections.values())
+        override val childNodes = mutableListOf<DeeNode>(*OrdersDirections.values())
     },
     PROFILE("profile") {
-        override val possibleDirections = mutableListOf<DeeNode>()
+        override val childNodes = mutableListOf<DeeNode>()
     }
 }
 
 enum class DashboardDirections(
     override var segment: String,
-    override val possibleDirections: MutableList<DeeNode> = mutableListOf(),
+    override val childNodes: MutableList<DeeNode> = mutableListOf(),
     override var host: String = "",
     override var nextNode: DeeNode? = null,
 ) : DeeNode {
@@ -68,7 +68,7 @@ enum class DashboardDirections(
 
 enum class OrdersDirections(
     override var segment: String,
-    override val possibleDirections: MutableList<DeeNode> = mutableListOf(),
+    override val childNodes: MutableList<DeeNode> = mutableListOf(),
     override var host: String = "",
     override var nextNode: DeeNode? = null,
 ) : DeeNode {

@@ -91,3 +91,9 @@ inline fun <reified E : Enum<E>> Fragment.consumeDeeNodeInFragAs(block: (E, DeeN
         }
     }
 }
+
+inline fun deeConfig(setup: DeeLinkerConfig.() -> Unit): DeeLinkerConfig {
+    return DeeLinkerConfig().apply {
+        setup()
+    }
+}
