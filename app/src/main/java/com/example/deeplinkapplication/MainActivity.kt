@@ -51,12 +51,12 @@ class MainActivity : AppCompatActivity() {
             config = deeConfig {
                 hosts = myHosts
                 deeMatchers = listOf(
-                    DeeMatcher("uzum://myorders/all-orders") {
+                    DeeMatcher("domain://myorders/all-orders") {
                         startActivity(Intent(this@MainActivity, OrdersActivity::class.java))
                     },
                     DeeMatcher(
                         matcher = { url ->
-                            "uzum://uzum.uz/myorders/.*".toRegex().matches(url)
+                            "domain://domain.uz/myorders/.*".toRegex().matches(url)
                         },
                         onMatch = { matchedUrl ->
                             startActivity(

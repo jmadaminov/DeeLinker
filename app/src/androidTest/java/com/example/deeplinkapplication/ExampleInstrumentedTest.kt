@@ -8,6 +8,7 @@ import com.example.deeplinkapplication.deeplink.MainDirections
 import com.example.deeplinkapplication.deeplink.myHosts
 import dev.jmadaminov.deelinker.DeeNode
 import dev.jmadaminov.deelinker.buildDeeLinker
+import dev.jmadaminov.deelinker.deeConfig
 import org.junit.Assert.*
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -34,12 +35,12 @@ class ExampleInstrumentedTest {
 
 
     private val deeplinks = listOf(
-        "uzum://cabinet",
-        "uzum://home",
-        "uzum://cabinet/orders",
-        "uzum://cabinet/orders/123",
-        "uzum://cabinet/orders/all",
-//        "uzum://cabinet/home",
+        "domain://cabinet",
+        "domain://home",
+        "domain://cabinet/orders",
+        "domain://cabinet/orders/123",
+        "domain://cabinet/orders/all",
+//        "domain://cabinet/home",
     )
 
 
@@ -51,18 +52,11 @@ class ExampleInstrumentedTest {
     }
 
     fun testUriConsumable(uri: Uri): Boolean {
-        val deeplinkStartingSegment = buildDeeLinker(
-            uri,
-            hosts = myHosts,
-            rootNodes = object : DeeNode {
-                override var host: String = ""
-                override var segment: String = ""
-                override var nextNode: DeeNode? = null
-                override val childNodes = mutableListOf<DeeNode>(*MainDirections.values())
-
-            },
+        val rootNode = buildDeeLinker<MainDirections>(
+            deeplinkUri = uri,
+            config = deeConfig { hosts = myHosts }
         )
-        return traverseSegments(MainDirections.values().map { it }, deeplinkStartingSegment)
+        return traverseSegments(MainDirections.values().map { it }, rootNode)
     }
 
     fun traverseSegments(actual: List<DeeNode>, deeNode: DeeNode?): Boolean {

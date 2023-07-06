@@ -13,12 +13,12 @@ class ExampleUnitTest {
 //
 //
 //    private val deeplinks = listOf(
-//        "uzum://cabinet",
-//        "uzum://home",
-//        "uzum://cabinet/orders",
-//        "uzum://cabinet/orders/123",
-//        "uzum://cabinet/orders/all",
-////    "uzum://cabinet/home",
+//        "domain://cabinet",
+//        "domain://home",
+//        "domain://cabinet/orders",
+//        "domain://cabinet/orders/123",
+//        "domain://cabinet/orders/all",
+////    "domain://cabinet/home",
 //    )
 //
 //
