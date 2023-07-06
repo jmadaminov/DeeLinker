@@ -1,4 +1,4 @@
-package com.example.deeplinkapplication.ui.notifications
+package com.example.deeplinkapplication.ui.cabinet
 
 import android.content.Intent
 import android.os.Bundle

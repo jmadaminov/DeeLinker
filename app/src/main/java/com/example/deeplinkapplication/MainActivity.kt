@@ -80,10 +80,7 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 MainDirections.DASHBOARD -> {
-                    navController.deeLinkInto(
-                        R.id.navigation_dashboard,
-                        deeStartNode.nextNode
-                    )
+                    navController.deeLinkInto(R.id.navigation_dashboard, deeStartNode.nextNode)
                 }
 
                 MainDirections.CABINET -> {

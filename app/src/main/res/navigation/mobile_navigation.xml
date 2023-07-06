@@ -19,7 +19,7 @@
 
     <fragment
         android:id="@+id/navigation_cabinet"
-        android:name="com.example.deeplinkapplication.ui.notifications.CabinetFragment"
+        android:name="com.example.deeplinkapplication.ui.cabinet.CabinetFragment"
         android:label="@string/title_cabinet"
         tools:layout="@layout/fragment_cabinet" />
 </navigation>

@@ -11,3 +11,13 @@ E.g. Non single activity project with fragments or a project which is migrating 
 
 ![img_2.png](img_2.png)
 
+Setup Gradle:
+
+```
+allprojects {
+repositories {
+maven { url 'https://jitpack.io' }
+}
+}
+```
+```implementation 'com.github.jakhongirmadaminov:deelinker:0.0.8-alpha'```

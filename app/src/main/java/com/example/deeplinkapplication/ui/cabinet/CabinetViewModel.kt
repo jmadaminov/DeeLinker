@@ -1,4 +1,4 @@
-package com.example.deeplinkapplication.ui.notifications
+package com.example.deeplinkapplication.ui.cabinet
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

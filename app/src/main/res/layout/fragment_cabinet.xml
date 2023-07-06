@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center_vertical"
-    tools:context=".ui.notifications.CabinetFragment">
+    tools:context=".ui.cabinet.CabinetFragment">
 
     <TextView
         android:id="@+id/text_notifications"
