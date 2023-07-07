@@ -14,8 +14,8 @@ import com.example.deeplinkapplication.databinding.ActivityBottomNavBinding
 import com.example.deeplinkapplication.deeplink.MainDirections
 import com.example.deeplinkapplication.deeplink.myHosts
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import dev.jmadaminov.deelinker.DeeMatcher
 import dev.jmadaminov.deelinker.DeeNode
+import dev.jmadaminov.deelinker.LinkHandler
 import dev.jmadaminov.deelinker.buildDeeLinker
 import dev.jmadaminov.deelinker.deeConfig
 
@@ -50,14 +50,14 @@ class MainActivity : AppCompatActivity() {
             deeplinkUri = data,
             config = deeConfig {
                 hosts = myHosts
-                deeMatchers = listOf(
-                    DeeMatcher("domain://myorders/all-orders") {
-                        startActivity(Intent(this@MainActivity, OrdersActivity::class.java))
-                    },
-                    DeeMatcher(
-                        matcher = { url ->
-                            "domain://domain.uz/myorders/.*".toRegex().matches(url)
-                        },
+                customHandlers = listOf(
+                    LinkHandler(
+                        predicate = { "domain://myorders/all-orders" == it },
+                        onMatch = {
+                            startActivity(Intent(this@MainActivity, OrdersActivity::class.java))
+                        }),
+                    LinkHandler(
+                        predicate = { "domain://domain.uz/myorders/.*".toRegex().matches(it) },
                         onMatch = { matchedUrl ->
                             startActivity(
                                 Intent(

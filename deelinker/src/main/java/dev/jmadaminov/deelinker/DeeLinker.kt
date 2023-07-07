@@ -7,8 +7,8 @@ inline fun <reified E : Enum<E>> buildDeeLinker(
     deeplinkUri: Uri,
     config: DeeLinkerConfig = DeeLinkerConfig()
 ): E? {
-    config.deeMatchers.forEach { handler ->
-        if (handler.matcher?.invoke(deeplinkUri.toString()) == true || handler.url == deeplinkUri.toString()) {
+    config.customHandlers.forEach { handler ->
+        if (handler.predicate(deeplinkUri.toString())) {
             handler.onMatch(deeplinkUri.toString())
             return null
         }

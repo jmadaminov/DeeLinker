@@ -20,4 +20,4 @@ maven { url 'https://jitpack.io' }
 }
 }
 ```
-```implementation 'com.github.jakhongirmadaminov:deelinker:0.0.8-alpha'```
+```implementation 'com.github.jakhongirmadaminov:deelinker:[release-version]'```
