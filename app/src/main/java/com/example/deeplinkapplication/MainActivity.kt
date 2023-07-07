@@ -74,7 +74,7 @@ class MainActivity : AppCompatActivity() {
                 ignoreSegmentKeys = listOf("uz", "ru", "en")
             }
         )?.let { deeStartNode ->
-            when (MainDirections.values().firstOrNull { it.segment == deeStartNode.segment }) {
+            when (deeStartNode) {
                 MainDirections.HOME -> {
                     //DO NOTHING YOU ARE ALREADY HERE
                 }
@@ -93,10 +93,6 @@ class MainActivity : AppCompatActivity() {
                                 })
                         }
                     }
-                }
-
-                null -> {
-                    println("Unknown deeplink start node (Consuming in MainActivity): ${deeStartNode.segment}")
                 }
             }
         }

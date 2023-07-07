@@ -6,7 +6,7 @@ import java.util.EnumSet
 inline fun <reified E : Enum<E>> buildDeeLinker(
     deeplinkUri: Uri,
     config: DeeLinkerConfig = DeeLinkerConfig()
-): DeeNode? {
+): E? {
     config.deeMatchers.forEach { handler ->
         if (handler.matcher?.invoke(deeplinkUri.toString()) == true || handler.url == deeplinkUri.toString()) {
             handler.onMatch(deeplinkUri.toString())
@@ -53,5 +53,5 @@ inline fun <reified E : Enum<E>> buildDeeLinker(
             currentNode?.setQuery(deeplinkUri.query)
         }
     }
-    return start
+    return start as? E?
 }
