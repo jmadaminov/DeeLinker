@@ -16,7 +16,7 @@ inline fun <reified T> Fragment.deeLinkInto(
         setupIntent(this)
         addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
         putExtra(DeeNode.QUERY_KEY, node.getQuery())
-        putExtra(DeeNode.PARAM_ID, node.getIdParam())
+        putExtra(DeeNode.PARAM_ID, node.getIdSegment())
         putExtra(DeeNode.NODE_KEY, node.nextNode)
     })
 }
@@ -25,7 +25,7 @@ inline fun <reified T> Fragment.deeLinkInto(node: DeeNode) {
     startActivity(Intent(requireActivity(), T::class.java).apply {
         addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
         putExtra(DeeNode.QUERY_KEY, node.getQuery())
-        putExtra(DeeNode.PARAM_ID, node.getIdParam())
+        putExtra(DeeNode.PARAM_ID, node.getIdSegment())
         putExtra(DeeNode.NODE_KEY, node.nextNode)
     })
 }
