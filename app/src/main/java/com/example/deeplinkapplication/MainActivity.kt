@@ -50,12 +50,14 @@ class MainActivity : AppCompatActivity() {
                 hosts = myHosts
                 customHandlers = listOf(
                     LinkHandler(
-                        predicate = { "domain://myorders/all-orders" == it },
+                        predicate = { "domain://myorders/all-orders" == it.toString() },
                         onMatch = {
                             startActivity(Intent(this@MainActivity, OrdersActivity::class.java))
                         }),
                     LinkHandler(
-                        predicate = { "domain://domain.uz/myorders/.*".toRegex().matches(it) },
+                        predicate = {
+                            "domain://domain.uz/myorders/.*".toRegex().matches(it.toString())
+                        },
                         onMatch = { uri ->
                             startActivity(
                                 Intent(

@@ -10,7 +10,7 @@ inline fun <reified E : Enum<E>> buildDeeLinker(
     onFail: (Uri) -> Unit = {},
 ) {
     config.customHandlers.forEach { handler ->
-        if (handler.predicate(deeplinkUri.toString())) {
+        if (handler.predicate(deeplinkUri)) {
             handler.onMatch(deeplinkUri)
             return
         }

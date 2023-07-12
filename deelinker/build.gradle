@@ -54,7 +54,7 @@ afterEvaluate {
 
                 groupId = 'com.github.jakhongirmadaminov'
                 artifactId = 'deelinker'
-                version = '0.0.11-alpha'
+                version = '0.1.0-alpha'
             }
         }
     }
