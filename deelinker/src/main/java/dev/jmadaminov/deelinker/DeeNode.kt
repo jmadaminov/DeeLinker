@@ -8,8 +8,15 @@ interface DeeNode : Serializable {
     var nextNode: DeeNode?
     val childNodes: MutableList<DeeNode>
     fun getQuery() = params[QUERY_KEY]
-    fun getIdParam() = params[PARAM_ID]
-    fun setIdParam(id: String?) {
+    fun getQueryProperty(key: String): String? {
+        val query = params[QUERY_KEY] ?: return null
+        val filterRegex = "$key=(?<filter>[A-Za-z\\s]+)".toRegex()
+        val match = filterRegex.find(query) ?: return null
+        return match.groups[key]?.value
+    }
+
+    fun getIdSegment() = params[PARAM_ID]
+    fun setIdSegment(id: String?) {
         params[PARAM_ID] = id
     }
 

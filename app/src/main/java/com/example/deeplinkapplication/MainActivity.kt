@@ -1,5 +1,3 @@
-@file:OptIn(ExperimentalStdlibApi::class)
-
 package com.example.deeplinkapplication
 
 import android.content.Intent
@@ -58,7 +56,7 @@ class MainActivity : AppCompatActivity() {
                         }),
                     LinkHandler(
                         predicate = { "domain://domain.uz/myorders/.*".toRegex().matches(it) },
-                        onMatch = { matchedUrl ->
+                        onMatch = { uri ->
                             startActivity(
                                 Intent(
                                     this@MainActivity,
@@ -66,36 +64,37 @@ class MainActivity : AppCompatActivity() {
                                 ).apply {
                                     putExtra(
                                         OrderActivity.EXTRA_ORDER_ID,
-                                        matchedUrl.substringAfterLast("/")
+                                        uri.toString().substringAfterLast("/")
                                     )
                                 })
                         })
                 )
                 ignoreSegmentKeys = listOf("uz", "ru", "en")
-            }
-        )?.let { deeStartNode ->
-            when (deeStartNode) {
-                MainDirections.HOME -> {
-                    //DO NOTHING YOU ARE ALREADY HERE
-                }
+            },
+            onSuccess = { node ->
+                when (node) {
+                    MainDirections.HOME -> {
+                        //DO NOTHING YOU ARE ALREADY HERE
+                    }
 
-                MainDirections.DASHBOARD -> {
-                    navController.deeLinkInto(R.id.navigation_dashboard, deeStartNode.nextNode)
-                }
+                    MainDirections.DASHBOARD -> {
+                        navController.deeLinkInto(R.id.navigation_dashboard, node.nextNode)
+                    }
 
-                MainDirections.CABINET -> {
-                    navController.deeLinkInto(R.id.navigation_cabinet, deeStartNode.nextNode)
-                    if (deeStartNode.nextNode == null) {
-                        deeStartNode.getIdParam()?.let { orderId ->
-                            startActivity(
-                                Intent(this@MainActivity, OrderActivity::class.java).apply {
-                                    putExtra(OrderActivity.EXTRA_ORDER_ID, orderId)
-                                })
+                    MainDirections.CABINET -> {
+                        navController.deeLinkInto(R.id.navigation_cabinet, node.nextNode)
+                        if (node.nextNode == null) {
+                            node.getIdSegment()?.let { orderId ->
+                                startActivity(
+                                    Intent(this@MainActivity, OrderActivity::class.java).apply {
+                                        putExtra(OrderActivity.EXTRA_ORDER_ID, orderId)
+                                    })
+                            }
                         }
                     }
                 }
             }
-        }
+        )
         intent.data = null
     }
 

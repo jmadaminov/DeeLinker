@@ -5,12 +5,14 @@ import java.util.EnumSet
 
 inline fun <reified E : Enum<E>> buildDeeLinker(
     deeplinkUri: Uri,
-    config: DeeLinkerConfig = DeeLinkerConfig()
-): E? {
+    config: DeeLinkerConfig = DeeLinkerConfig(),
+    onSuccess: (E) -> Unit,
+    onFail: (Uri) -> Unit = {},
+) {
     config.customHandlers.forEach { handler ->
         if (handler.predicate(deeplinkUri.toString())) {
-            handler.onMatch(deeplinkUri.toString())
-            return null
+            handler.onMatch(deeplinkUri)
+            return
         }
     }
 
@@ -20,7 +22,7 @@ inline fun <reified E : Enum<E>> buildDeeLinker(
     deeplinkUri.host?.let { host ->
         if (!config.hosts.contains(host)) {
             currentNode = rootNodes.firstOrNull { it.segment == host }
-            currentNode?.setIdParam(null)
+            currentNode?.setIdSegment(null)
             currentNode?.setQuery(deeplinkUri.query)
         }
     }
@@ -28,14 +30,14 @@ inline fun <reified E : Enum<E>> buildDeeLinker(
     deeplinkUri.path?.split("/")?.forEach lit@{ pathEntry ->
         if (config.ignoreSegmentKeys.contains(pathEntry)) return@lit
         pathEntry.toLongOrNull()?.let {
-            currentNode?.setIdParam(pathEntry)
+            currentNode?.setIdSegment(pathEntry)
             return@lit
         } ?: run {
             if (pathEntry.isNotBlank()) {
                 currentNode = if (currentNode == null) {
                     val node = rootNodes.firstOrNull { it.segment == pathEntry }
                     node?.nextNode = null
-                    node?.setIdParam(null)
+                    node?.setIdSegment(null)
                     node?.setQuery(null)
                     node
                 } else {
@@ -53,5 +55,9 @@ inline fun <reified E : Enum<E>> buildDeeLinker(
             currentNode?.setQuery(deeplinkUri.query)
         }
     }
-    return start as? E?
+    start?.let {
+        onSuccess(it as E)
+    } ?: run {
+        onFail(deeplinkUri)
+    }
 }

@@ -52,11 +52,15 @@ class ExampleInstrumentedTest {
     }
 
     fun testUriConsumable(uri: Uri): Boolean {
-        val rootNode = buildDeeLinker<MainDirections>(
+        buildDeeLinker<MainDirections>(
             deeplinkUri = uri,
-            config = deeConfig { hosts = myHosts }
+            config = deeConfig { hosts = myHosts },
+            onSuccess = { node ->
+                return traverseSegments(MainDirections.values().map { it }, node)
+            },
+            onFail = { return false }
         )
-        return traverseSegments(MainDirections.values().map { it }, rootNode)
+        return false
     }
 
     fun traverseSegments(actual: List<DeeNode>, deeNode: DeeNode?): Boolean {
