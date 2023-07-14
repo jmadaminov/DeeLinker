@@ -10,7 +10,7 @@ interface DeeNode : Serializable {
     fun getQuery() = params[QUERY_KEY]
     fun getQueryProperty(key: String): String? {
         val query = params[QUERY_KEY] ?: return null
-        val filterRegex = "$key=(?<filter>[A-Za-z\\s]+)".toRegex()
+        val filterRegex = "$key=(?<$key>[A-Za-z\\s]+)".toRegex()
         val match = filterRegex.find(query) ?: return null
         return match.groups[key]?.value
     }
