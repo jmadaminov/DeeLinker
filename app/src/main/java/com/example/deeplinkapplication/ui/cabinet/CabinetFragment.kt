@@ -47,8 +47,8 @@ class CabinetFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
 
-        consumeDeeNodeInFragAs<CabinetDirections> { segment, deeNode ->
-            when (segment) {
+        consumeDeeNodeInFragAs<CabinetDirections> { deeNode ->
+            when (deeNode) {
                 CabinetDirections.ORDERS -> {
                     deeLinkInto<OrdersActivity>(deeNode)
                 }

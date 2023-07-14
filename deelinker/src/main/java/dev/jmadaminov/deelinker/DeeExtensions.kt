@@ -73,7 +73,7 @@ inline fun <reified E : Enum<E>> Activity.consumeDeeNodeAs(
     }
 }
 
-inline fun <reified E : Enum<E>> Fragment.consumeDeeNodeInFragAs(block: (E, DeeNode) -> Unit) {
+inline fun <reified E : Enum<E>> Fragment.consumeDeeNodeInFragAs(block: (E) -> Unit) {
     val deeNode = arguments?.getSerializable(DeeNode.NODE_KEY) as DeeNode?
     arguments?.putSerializable(DeeNode.NODE_KEY, null)
     deeNode?.let {
@@ -87,7 +87,12 @@ inline fun <reified E : Enum<E>> Fragment.consumeDeeNodeInFragAs(block: (E, DeeN
                 "Trying to consume unknown node ==> ${deeNode.segment} <== which does not exist in *** $dirs ***. Make sure you have registered the node in DeeSegmentTree.kt"
             )
         } else {
-            block(enumValue, deeNode)
+            (enumValue as DeeNode).nextNode = deeNode.nextNode
+            enumValue.host = deeNode.host
+            enumValue.segment = deeNode.segment
+            enumValue.setIdSegment(deeNode.getIdSegment())
+            enumValue.setQuery(deeNode.getQuery())
+            block(enumValue)
         }
     }
 }
