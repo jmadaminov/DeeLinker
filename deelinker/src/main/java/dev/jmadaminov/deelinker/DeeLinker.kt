@@ -33,8 +33,8 @@ inline fun <reified E : Enum<E>> buildDeeLinker(
         config.segmentAsMetaDataHandlers.forEach { predicate ->
             if (predicate.second(pathEntry)) {
                 currentNode?.setMetaData(predicate.first, pathEntry)
-                return@lit
             }
+            return@lit
         }
         if (currentNode == null) {
             currentNode = rootNodes.firstOrNull { it.segment == pathEntry }
