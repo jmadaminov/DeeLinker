@@ -30,12 +30,16 @@ inline fun <reified E : Enum<E>> buildDeeLinker(
 
     deeplinkUri.pathSegments.forEach lit@{ pathEntry ->
         if (config.ignoreSegmentKeys.contains(pathEntry) || pathEntry.isBlank()) return@lit
+
+        var isMetaData = false
         config.segmentAsMetaDataHandlers.forEach { predicate ->
             if (predicate.second(pathEntry)) {
                 currentNode?.setMetaData(predicate.first, pathEntry)
+                isMetaData = true
             }
-            return@lit
         }
+        if (isMetaData) return@lit
+
         if (currentNode == null) {
             currentNode = rootNodes.firstOrNull { it.segment == pathEntry }
             currentNode?.cleanMetaData()
