@@ -19,18 +19,10 @@ class OrderActivity : AppCompatActivity() {
             binding.tvSelectedOrder.text = orderId
         }
 
-        intent.getStringExtra(DeeNode.PARAM_ID)?.let { orderId ->
+       DeeNode.getMetaData(EXTRA_ORDER_ID)?.let { orderId ->
             binding.tvSelectedOrder.text = orderId
         }
 
-//        consumeDeeNodeAs<Any>()?.let { dlNode ->
-//            when (dlNode) {
-//                else -> {
-//                    print("WARNING! UNKNOWN DEEPLINK NODE! CAN'T GO FURTHER!")
-//                }
-//            }
-//
-//        }
     }
 
     companion object {

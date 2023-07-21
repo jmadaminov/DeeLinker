@@ -71,6 +71,8 @@ class MainActivity : AppCompatActivity() {
                                 })
                         })
                 )
+
+                segmentAsMetaDataHandlers = listOf(ORDER_ID_KEY to ::isOrderId)
                 ignoreSegmentKeys = listOf("uz", "ru", "en")
             },
             onSuccess = { node ->
@@ -86,7 +88,7 @@ class MainActivity : AppCompatActivity() {
                     MainDirections.CABINET -> {
                         navController.deeLinkInto(R.id.navigation_cabinet, node.nextNode)
                         if (node.nextNode == null) {
-                            node.getIdSegment()?.let { orderId ->
+                            node.getMetaData(ORDER_ID_KEY)?.let { orderId ->
                                 startActivity(
                                     Intent(this@MainActivity, OrderActivity::class.java).apply {
                                         putExtra(OrderActivity.EXTRA_ORDER_ID, orderId)
@@ -100,6 +102,13 @@ class MainActivity : AppCompatActivity() {
         intent.data = null
     }
 
+    private fun isOrderId(pathEntry: String): Boolean {
+        return pathEntry.toLongOrNull() != null
+    }
+
+    companion object {
+        private val ORDER_ID_KEY: String = "order_id"
+    }
 }
 
 

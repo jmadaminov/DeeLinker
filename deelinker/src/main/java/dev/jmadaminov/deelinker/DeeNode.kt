@@ -7,27 +7,41 @@ interface DeeNode : Serializable {
     var segment: String
     var nextNode: DeeNode?
     val childNodes: MutableList<DeeNode>
-    fun getQuery() = params[QUERY_KEY]
+
+    fun getQuery() = metadata[QUERY_KEY]
+
+    fun setQuery(query: String?) {
+        metadata[QUERY_KEY] = query
+    }
+
     fun getQueryProperty(key: String): String? {
-        val query = params[QUERY_KEY] ?: return null
+        val query = metadata[QUERY_KEY] ?: return null
         val filterRegex = "$key=(?<$key>[A-Za-z\\s]+)".toRegex()
         val match = filterRegex.find(query) ?: return null
         return match.groups[key]?.value
     }
 
-    fun getIdSegment() = params[PARAM_ID]
-    fun setIdSegment(id: String?) {
-        params[PARAM_ID] = id
+    fun cleanMetaData() {
+        metadata.clear()
     }
 
-    fun setQuery(query: String?) {
-        params[QUERY_KEY] = query
+    fun getMetaData(key: String): String? {
+        return metadata[key]
     }
+
+    fun setMetaData(key: String, value: String?) {
+        metadata[key] = value
+    }
+
+    fun getMetaDataMap(): Map<String, String?> = metadata
 
     companion object {
-        private val params = hashMapOf<String, String?>()
+        fun getMetaData(key: String): String? {
+            return metadata[key]
+        }
+
+        private val metadata = hashMapOf<String, String?>()
         const val NODE_KEY = "deeplink_node"
-        const val PARAM_ID = "deeplink_param_id"
-        const val QUERY_KEY = "deeplink_query"
+        private const val QUERY_KEY = "deeplink_query"
     }
 }

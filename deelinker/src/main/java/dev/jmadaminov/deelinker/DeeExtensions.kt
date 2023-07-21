@@ -15,8 +15,6 @@ inline fun <reified T> Fragment.deeLinkInto(
     startActivity(Intent(requireActivity(), T::class.java).apply {
         setupIntent(this)
         addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
-        putExtra(DeeNode.QUERY_KEY, node.getQuery())
-        putExtra(DeeNode.PARAM_ID, node.getIdSegment())
         putExtra(DeeNode.NODE_KEY, node.nextNode)
     })
 }
@@ -24,8 +22,6 @@ inline fun <reified T> Fragment.deeLinkInto(
 inline fun <reified T> Fragment.deeLinkInto(node: DeeNode) {
     startActivity(Intent(requireActivity(), T::class.java).apply {
         addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
-        putExtra(DeeNode.QUERY_KEY, node.getQuery())
-        putExtra(DeeNode.PARAM_ID, node.getIdSegment())
         putExtra(DeeNode.NODE_KEY, node.nextNode)
     })
 }
@@ -48,14 +44,8 @@ fun NavController.deeLinkInto(@IdRes destinationId: Int, node: DeeNode?) {
 }
 
 
-inline fun <reified E : Enum<E>> Activity.consumeDeeNodeAs(
-    onParamId: (String, DeeNode?) -> Unit = { _, _ -> },
-    onQuery: (String, DeeNode?) -> Unit = { _, _ -> },
-    consumeBlock: (E, DeeNode) -> Unit
-) {
+inline fun <reified E : Enum<E>> Activity.consumeDeeNodeAs(consumeNode: (E) -> Unit) {
     val deeNode = intent.extras?.getSerializable(DeeNode.NODE_KEY) as DeeNode?
-    intent.extras?.getString(DeeNode.PARAM_ID)?.let { onParamId(it, deeNode) }
-    intent.extras?.getString(DeeNode.QUERY_KEY)?.let { onQuery(it, deeNode) }
     intent.extras?.putSerializable(DeeNode.NODE_KEY, null)
     deeNode?.let {
         val enumValue = enumValues<E>().find { (it as DeeNode).segment == deeNode.segment }
@@ -68,7 +58,11 @@ inline fun <reified E : Enum<E>> Activity.consumeDeeNodeAs(
                 "Trying to consume unknown node ==> ${deeNode.segment} <== which does not exist in *** $dirs ***. Make sure you have registered the node in DeeSegmentTree.kt"
             )
         } else {
-            consumeBlock(enumValue, deeNode)
+            (enumValue as DeeNode).nextNode = deeNode.nextNode
+            enumValue.host = deeNode.host
+            enumValue.segment = deeNode.segment
+            enumValue.setQuery(deeNode.getQuery())
+            consumeNode(enumValue)
         }
     }
 }
@@ -90,7 +84,6 @@ inline fun <reified E : Enum<E>> Fragment.consumeDeeNodeInFragAs(block: (E) -> U
             (enumValue as DeeNode).nextNode = deeNode.nextNode
             enumValue.host = deeNode.host
             enumValue.segment = deeNode.segment
-            enumValue.setIdSegment(deeNode.getIdSegment())
             enumValue.setQuery(deeNode.getQuery())
             block(enumValue)
         }

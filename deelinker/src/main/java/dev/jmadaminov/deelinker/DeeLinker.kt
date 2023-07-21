@@ -19,45 +19,40 @@ inline fun <reified E : Enum<E>> buildDeeLinker(
     val rootNodes = EnumSet.allOf(E::class.java).map { it as DeeNode }
     var start: DeeNode? = null
     var currentNode: DeeNode? = null
-    deeplinkUri.host?.let { host ->
-        if (!config.hosts.contains(host)) {
-            currentNode = rootNodes.firstOrNull { it.segment == host }
-            currentNode?.setIdSegment(null)
-            currentNode?.setQuery(deeplinkUri.query)
+    if (deeplinkUri.host != null && !config.hosts.contains(deeplinkUri.host)) {
+        currentNode = rootNodes.firstOrNull { it.segment == deeplinkUri.host }?.apply {
+            cleanMetaData()
+            nextNode = null
+            setQuery(deeplinkUri.query)
         }
+        start = currentNode
     }
 
-    deeplinkUri.path?.split("/")?.forEach lit@{ pathEntry ->
-        if (config.ignoreSegmentKeys.contains(pathEntry)) return@lit
-        pathEntry.toLongOrNull()?.let {
-            currentNode?.setIdSegment(pathEntry)
-            return@lit
-        } ?: run {
-            if (pathEntry.isNotBlank()) {
-                currentNode = if (currentNode == null) {
-                    val node = rootNodes.firstOrNull { it.segment == pathEntry }
-                    node?.nextNode = null
-                    node?.setIdSegment(null)
-                    node?.setQuery(null)
-                    node
-                } else {
-                    val temp = object : DeeNode {
-                        override var segment = pathEntry
-                        override var nextNode: DeeNode? = null
-                        override val childNodes: MutableList<DeeNode> = mutableListOf()
-                        override var host: String = deeplinkUri.host ?: ""
-                    }
-                    currentNode?.nextNode = temp
-                    temp
-                }
+    deeplinkUri.pathSegments.forEach lit@{ pathEntry ->
+        if (config.ignoreSegmentKeys.contains(pathEntry) || pathEntry.isBlank()) return@lit
+        config.segmentAsMetaDataHandlers.forEach { predicate ->
+            if (predicate.second(pathEntry)) {
+                currentNode?.setMetaData(predicate.first, pathEntry)
+                return@lit
             }
-            if (start == null) start = currentNode
-            currentNode?.setQuery(deeplinkUri.query)
         }
+        if (currentNode == null) {
+            currentNode = rootNodes.firstOrNull { it.segment == pathEntry }
+            currentNode?.cleanMetaData()
+        } else {
+            val temp = makeNodeFor(pathEntry, deeplinkUri.host ?: "")
+            currentNode?.nextNode = temp
+            currentNode = temp
+        }
+        if (start == null) start = currentNode
     }
-    start?.let {
-        onSuccess(it as E)
-    } ?: run {
-        onFail(deeplinkUri)
-    }
+    currentNode?.setQuery(deeplinkUri.query)
+    if (start != null) onSuccess(start as E) else onFail(deeplinkUri)
+}
+
+fun makeNodeFor(pathEntry: String, host: String) = object : DeeNode {
+    override var segment = pathEntry
+    override var nextNode: DeeNode? = null
+    override val childNodes: MutableList<DeeNode> = mutableListOf()
+    override var host: String = host
 }
