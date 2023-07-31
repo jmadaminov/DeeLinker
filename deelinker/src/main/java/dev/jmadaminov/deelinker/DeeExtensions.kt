@@ -6,7 +6,10 @@ import android.os.Bundle
 import android.util.Log
 import androidx.annotation.IdRes
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
+import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.launch
 
 inline fun <reified T> Fragment.deeLinkInto(
     node: DeeNode,
@@ -67,7 +70,7 @@ inline fun <reified E : Enum<E>> Activity.consumeDeeNodeAs(consumeNode: (E) -> U
     }
 }
 
-inline fun <reified E : Enum<E>> Fragment.consumeDeeNodeInFragAs(block: (E) -> Unit) {
+inline fun <reified E : Enum<E>> Fragment.consumeDeeNodeInFragAs(crossinline block: (E) -> Unit) {
     val deeNode = arguments?.getSerializable(DeeNode.NODE_KEY) as DeeNode?
     arguments?.putSerializable(DeeNode.NODE_KEY, null)
     deeNode?.let {
@@ -85,7 +88,10 @@ inline fun <reified E : Enum<E>> Fragment.consumeDeeNodeInFragAs(block: (E) -> U
             enumValue.host = deeNode.host
             enumValue.segment = deeNode.segment
             enumValue.setQuery(deeNode.getQuery())
-            block(enumValue)
+            lifecycleScope.launch(Main) {
+                parentFragmentManager.executePendingTransactions()
+                block(enumValue)
+            }
         }
     }
 }
