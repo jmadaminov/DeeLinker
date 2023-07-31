@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.annotation.IdRes
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
@@ -47,7 +48,7 @@ fun NavController.deeLinkInto(@IdRes destinationId: Int, node: DeeNode?) {
 }
 
 
-inline fun <reified E : Enum<E>> Activity.consumeDeeNodeAs(consumeNode: (E) -> Unit) {
+inline fun <reified E : Enum<E>> AppCompatActivity.consumeDeeNodeAs(crossinline consumeNode: (E) -> Unit) {
     val deeNode = intent.extras?.getSerializable(DeeNode.NODE_KEY) as DeeNode?
     intent.extras?.putSerializable(DeeNode.NODE_KEY, null)
     deeNode?.let {
@@ -65,7 +66,10 @@ inline fun <reified E : Enum<E>> Activity.consumeDeeNodeAs(consumeNode: (E) -> U
             enumValue.host = deeNode.host
             enumValue.segment = deeNode.segment
             enumValue.setQuery(deeNode.getQuery())
-            consumeNode(enumValue)
+            lifecycleScope.launch(Main) {
+                supportFragmentManager.executePendingTransactions()
+                consumeNode(enumValue)
+            }
         }
     }
 }

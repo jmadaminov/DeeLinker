@@ -36,7 +36,7 @@ android {
 dependencies {
 //    implementation("com.github.livefront.sealed-enum:runtime:0.7.0")
 //    ksp("com.github.livefront.sealed-enum:ksp:0.7.0")
-    implementation "androidx.navigation:navigation-fragment:2.6.0"
+    implementation "androidx.navigation:navigation-fragment-ktx:2.6.0"
     implementation "androidx.navigation:navigation-compose:2.6.0"
     implementation 'androidx.core:core-ktx:1.10.1'
     implementation 'androidx.appcompat:appcompat:1.6.1'
@@ -54,7 +54,7 @@ afterEvaluate {
 
                 groupId = 'com.github.jakhongirmadaminov'
                 artifactId = 'deelinker'
-                version = '0.4-beta'
+                version = '0.5-beta'
             }
         }
     }
