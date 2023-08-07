@@ -42,6 +42,7 @@ inline fun <reified E : Enum<E>> buildDeeLinker(
 
         if (currentNode == null) {
             currentNode = rootNodes.firstOrNull { it.segment == pathEntry }
+            currentNode?.nextNode = null
             currentNode?.cleanMetaData()
         } else {
             val temp = makeNodeFor(pathEntry, deeplinkUri.host ?: "")
