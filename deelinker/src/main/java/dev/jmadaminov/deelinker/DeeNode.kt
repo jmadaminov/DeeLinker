@@ -40,6 +40,10 @@ interface DeeNode : Serializable {
             return metadata[key]
         }
 
+        fun setMetaData(key: String, value: String?) {
+            metadata[key] = value
+        }
+
         private val metadata = hashMapOf<String, String?>()
         const val NODE_KEY = "deeplink_node"
         private const val QUERY_KEY = "deeplink_query"
