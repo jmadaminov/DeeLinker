@@ -16,9 +16,9 @@ interface DeeNode : Serializable {
 
     fun getQueryProperty(key: String): String? {
         val query = metadata[QUERY_KEY] ?: return null
-        val filterRegex = "$key=(?<$key>[A-Za-z\\s]+)".toRegex()
-        val match = filterRegex.find(query) ?: return null
-        return match.groups[key]?.value
+        val pattern = """$key=(.*?)(?:&|$)""".toRegex()
+        val matchResult = pattern.find(query) ?: return null
+        return matchResult.groupValues.getOrNull(1)
     }
 
     fun cleanMetaData() {
@@ -38,10 +38,6 @@ interface DeeNode : Serializable {
     companion object {
         fun getMetaData(key: String): String? {
             return metadata[key]
-        }
-
-        fun setMetaData(key: String, value: String?) {
-            metadata[key] = value
         }
 
         private val metadata = hashMapOf<String, String?>()
